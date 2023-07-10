@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:route_task/core/utils/assets_manager.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:route_task/core/utils/color_manager.dart';
 import 'package:route_task/core/utils/font_manager.dart';
 import 'package:route_task/core/utils/styles_manager.dart';
+
+import '../bloc/home_cubit.dart';
 
 class ProductItem extends StatelessWidget {
   const ProductItem({Key? key, required this.index}) : super(key: key);
@@ -10,7 +12,7 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final product = HomeCubit.get(context).products?[index] ?? GetProductResponse();
+    final product = context.read<HomeCubit>().productsDetails?.products?[index];
 
     return Container(
       decoration: BoxDecoration(
@@ -22,15 +24,19 @@ class ProductItem extends StatelessWidget {
       child: Stack(
         children: [
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20)),
-                  child: Image.asset(
-                    ImageAssets.productPic,
-                  )),
+              SizedBox(
+                child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20)),
+                    child: Image.network(
+                      height: 90,
+                      fit: BoxFit.cover,
+                      product?.thumbnail ?? '',
+                    )),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
@@ -38,30 +44,31 @@ class ProductItem extends StatelessWidget {
                   children: [
                     const SizedBox(height: 4),
                     Text(
-                      'Nike air jordon',
+                      product?.title ?? '',
+                      overflow: TextOverflow.ellipsis,
                       style: getRegularStyle(
-                          color: Colors.black87, fontSize: FontSize.s18),
+                          color: Colors.black87, fontSize: FontSize.s14),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Nike shoes flexable for women',
+                      product?.description ?? '',
                       overflow: TextOverflow.ellipsis,
                       style: getRegularStyle(
-                          color: Colors.black87, fontSize: FontSize.s18),
+                          color: Colors.black87, fontSize: FontSize.s14),
                     ),
                     const SizedBox(height: 8),
                     Row(
                       children: [
                         Text(
-                          'EGP 1,200',
+                          'EGP ${product?.price}',
                           style: getRegularStyle(
                               color: Colors.black87, fontSize: FontSize.s14),
                         ),
                         const SizedBox(
                           width: 6,
                         ),
-                        const Text('2000 EGP',
-                            style: TextStyle(
+                        Text('${product?.discountPercentage} EGP',
+                            style: const TextStyle(
                                 fontSize: FontSize.s12,
                                 color: Colors.grey,
                                 decoration: TextDecoration.lineThrough))
@@ -71,7 +78,7 @@ class ProductItem extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          'Review (4.6) ',
+                          'Review (${product?.rating}) ',
                           style: getRegularStyle(
                               color: Colors.black87, fontSize: FontSize.s14),
                         ),
@@ -81,12 +88,11 @@ class ProductItem extends StatelessWidget {
                           color: Colors.yellowAccent,
                         ),
                         const Spacer(),
-                        Expanded(
-                            child: Icon(
-                          size: 27,
+                        Icon(
+                          size: 30,
                           Icons.add_circle_rounded,
                           color: ColorManager.primary,
-                        ))
+                        )
                       ],
                     ),
                   ],
@@ -94,19 +100,36 @@ class ProductItem extends StatelessWidget {
               ),
             ],
           ),
-          Positioned(
-            right: 10,
-            top: 10,
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              maxRadius: 15,
-              child: Icon(Icons.favorite_outline_rounded,
-                  color: ColorManager.primary),
-            ),
-          ),
+          buildFavouriteButton(),
         ],
       ),
     );
     // : const ShimmerWidget.rectangle(height: 120);
+  }
+
+  Positioned buildFavouriteButton() {
+    return Positioned(
+      right: 10,
+      top: 10,
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: CircleAvatar(
+          backgroundColor: Colors.white,
+          maxRadius: 15,
+          child:
+              Icon(Icons.favorite_outline_rounded, color: ColorManager.primary),
+        ),
+      ),
+    );
   }
 }

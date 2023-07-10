@@ -4,13 +4,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/config/app.dart';
 import 'core/config/bloc_observer.dart';
+import 'core/config/service_locator.dart';
 
-void main() {
+void main() async {
   Bloc.observer = MyBlocObserver();
+  WidgetsFlutterBinding.ensureInitialized();
 
+  await initAppModule();
   runApp(
     DevicePreview(
-        enabled: true,
+        enabled: false,
         builder: (BuildContext context) {
           return const MyApp();
         }),

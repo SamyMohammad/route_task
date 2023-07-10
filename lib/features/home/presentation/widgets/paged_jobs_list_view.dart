@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:route_task/features/home/presentation/bloc/home_cubit.dart';
 import 'package:route_task/features/home/presentation/widgets/product_item.dart';
 
 class ProductsGridView extends StatefulWidget {
@@ -12,11 +14,11 @@ class ProductsGridView extends StatefulWidget {
 class _ProductsGridViewState extends State<ProductsGridView> {
   @override
   Widget build(BuildContext context) {
-    // final products = HomeCubit.get(context).products;
+    final cubit = context.read<HomeCubit>();
     return AnimationLimiter(
       child: GridView.builder(
         physics: const BouncingScrollPhysics(),
-        itemCount: 5,
+        itemCount: cubit.productsDetails?.products?.length ?? 0,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             childAspectRatio: .80,
@@ -29,13 +31,7 @@ class _ProductsGridViewState extends State<ProductsGridView> {
                 duration: const Duration(milliseconds: 1500),
                 // delay: const Duration(milliseconds: 700),
                 child: InkWell(
-                  onTap: () {
-                    // Navigator.of(
-                    //   context,
-                    //   rootNavigator: true,
-                    // ).pushNamed(Routes.productDetailsRoute,
-                    //     arguments: products?[index]);
-                  },
+                  onTap: () {},
                   child: SlideAnimation(
                     child: FadeInAnimation(
                       child: ProductItem(
