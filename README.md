@@ -1,9 +1,12 @@
 # route_task
+I make this app with :-
+- clean arch
+- cubit as a state management
+- dependency injection with get it 
+- retrofit for api integration to handle the data source
+- json serializable for serialization 
 
-A new Flutter project.
-
-## Getting Started
-
+this is a short video showing the task :-
 
 https://github.com/SamyMohammad/route_task/assets/90985995/f6092dc6-28fe-4929-992e-d96b1c04591f
 
